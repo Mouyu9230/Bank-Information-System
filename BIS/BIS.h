@@ -28,20 +28,6 @@ void Withdrawal();
 
 void Deposit_transfer();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void loading_bar(void);
 
 #endif
