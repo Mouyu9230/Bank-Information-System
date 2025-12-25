@@ -116,8 +116,51 @@ void Add_user() //注册账户 陈华宇
 }
 
 
-void Delete_user(){//注销账户
-    printf("null");
+void Delete_user(){//注销账户  郁博翔
+    int found = -1;
+    long long del_account;
+    char del_pwd[100];
+
+    printf("请输入要注销的账号和密码（格式：账号 密码）：\n");
+    if (scanf("%lld %s", &del_account, del_pwd) != 2) {
+        printf("输入格式错误！请重新输入\n");
+        int sweeper;
+        while ((sweeper = getchar()) != '\n' && sweeper != EOF);
+        return;
+    }
+
+    // 查找用户
+    for (int i = 0; i < usercount; i++) {
+        if (users[i].account == del_account &&
+            strcmp(users[i].password, del_pwd) == 0) {
+            found = i;
+            break;
+        }
+    }
+
+    if (found == -1) {
+        printf("账号或密码错误，注销失败！\n");
+        return;
+    }
+
+    // 覆盖删除：后面的用户前移
+    for (int i = found; i < usercount - 1; i++) {
+        users[i] = users[i + 1];
+    }
+    usercount--;
+
+    // 同步写回文件
+    FILE *fp = fopen("user.dat", "wb");
+    if (fp == NULL) {
+        printf("文件写入失败！但内存中已删除该账户\n");
+        return;
+    }
+    for (int i = 0; i < usercount; i++) {
+        fwrite(&users[i], sizeof(user), 1, fp);
+    }
+    fclose(fp);
+
+    printf("账户注销成功！\n");
 }
 
 void Check_information(){//查看账户信息 陈镜宇
