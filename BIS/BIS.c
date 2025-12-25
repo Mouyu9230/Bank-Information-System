@@ -7,7 +7,7 @@
     #define SLEEP(ms) usleep((ms)*1000)  // Linux/macOS：毫秒转微秒
 #endif
     user users[2000];
-    int usercount=3;
+    int usercount=0;
     char name[100];
     long long int IDnumber;
     long long int account;
@@ -15,11 +15,16 @@
     char password[100];
 int main(){
 loading_bar();
+Load_users_from_file(); 
 
     int userchoice=0;
-    users[0]=(user){"Mouyu",13193918,2313228276,122500.6,"PASSWORD"};
-    users[1]=(user){"Couvor",132345234,6868668,999999,"PASSWORD"};
-    users[2]=(user){"zsh",123131233,123456,1000,"PASSWORD"};
+        if(usercount==0){
+        users[0]=(user){"Mouyu",13193918,2313228276,122500.6,"PASSWORD"};
+        users[1]=(user){"Couvor",132345234,6868668,999999,"PASSWORD"};
+        users[2]=(user){"zsh",123131233,123456,1000,"PASSWORD"};
+        usercount=3;
+        Save_users_to_file(); // 保存默认用户到文件
+    }
 
 
     printf("=============银行信息管理系统==================\n");
@@ -35,12 +40,12 @@ loading_bar();
         continue;
     }
         switch(userchoice){
-            case 1: Deposit();break;
-            case 2: Withdrawal();break;
-            case 3: Deposit_transfer();break;
+            case 1: Deposit();Save_users_to_file();break;
+            case 2: Withdrawal();Save_users_to_file();break;
+            case 3: Deposit_transfer();Save_users_to_file();break;
             case 4: Check_information();break;
-            case 5: Add_user();break;
-            case 6: Delete_user();break;
+            case 5: Add_user();Save_users_to_file();break;
+            case 6: Delete_user();Save_users_to_file();break;
             case 0: printf("欢迎再次使用");return 0;
             default:printf("wrong input!");
         };
@@ -374,5 +379,23 @@ void loading_bar(void) {//加载进度条函数
         fflush(stdout);        SLEEP(50); // 越大越慢
     }
     printf("\n处理完成！\n");
+}
+void Load_users_from_file() {
+    FILE *fp = fopen("user.dat", "rb");
+    if (!fp) { usercount = 0; return; }
+    usercount = 0;
+    while (fread(&users[usercount], sizeof(user), 1, fp)) {
+        usercount++;
+        if (usercount >= 2000) break;
+    }
+    fclose(fp);
+}
+
+void Save_users_to_file() {
+    FILE *fp = fopen("user.dat", "wb");
+    if (!fp) { printf("文件写入失败！\n"); return; }
+    for (int i = 0; i < usercount; i++)
+        fwrite(&users[i], sizeof(user), 1, fp);
+    fclose(fp);
 }
 //----------------------------------------------------------------------------------------

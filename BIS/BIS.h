@@ -30,4 +30,8 @@ void Deposit_transfer();
 
 void loading_bar(void);
 
+void Load_users_from_file();
+
+void Save_users_to_file();
+
 #endif
