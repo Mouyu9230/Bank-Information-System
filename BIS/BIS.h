@@ -34,4 +34,6 @@ void Load_users_from_file();
 
 void Save_users_to_file();
 
+void Show_all_users();
+
 #endif
