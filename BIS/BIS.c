@@ -30,7 +30,7 @@ Load_users_from_file();
     printf("=============银行信息管理系统==================\n");
     printf("银行信息管理系统\n");
     printf("输入数字选择对应服务\n");
-    printf("1:存款\n2:取款\n3:转账\n4:查看账户信息\n5:创建账户\n6:注销账户\n0:退出\n");
+    printf("1:存款\n2:取款\n3:转账\n4:查看账户信息\n5:创建账户\n6:注销账户\n7:展示所有用户\n0:退出\n");
     printf("========================================================\n");    
         while(1){
      if(scanf("%d",&userchoice)!=1) {
@@ -46,6 +46,7 @@ Load_users_from_file();
             case 4: Check_information();break;
             case 5: Add_user();Save_users_to_file();break;
             case 6: Delete_user();Save_users_to_file();break;
+            case 7: Show_all_users();break;
             case 0: printf("欢迎再次使用");return 0;
             default:printf("wrong input!");
         };
@@ -171,7 +172,7 @@ void Delete_user(){//注销账户  郁博翔
 void Check_information(){//查看账户信息 陈镜宇
     int checkflag=0;
     printf("请输入账号和密码\n");
-    if(scanf("%lld %s",&account,password)!=2){//推荐大家处理输入问题时增加这样的一个检测格式是否正确和清除输入缓冲区的模块，如果输入的格式不符合要求，不仅会scanf失败，而且错误的信息会留在缓冲区里，我就犯了这么个错整出来了个死循环
+    if(scanf("%lld %s",&account,password)!=2){
          printf("输入格式错误！请重新输入\n");
          int sweeper;
          while((sweeper=getchar())!='\n'&&sweeper!=EOF);
@@ -380,6 +381,7 @@ void loading_bar(void) {//加载进度条函数
     }
     printf("\n处理完成！\n");
 }
+
 void Load_users_from_file() {
     FILE *fp = fopen("user.dat", "rb");
     if (!fp) { usercount = 0; return; }
@@ -398,4 +400,22 @@ void Save_users_to_file() {
         fwrite(&users[i], sizeof(user), 1, fp);
     fclose(fp);
 }
+void Show_all_users(){//展示所有用户信息
+    if(usercount == 0){
+        printf("当前没有任何用户！\n");
+        return;
+    }
+
+    printf("=========== 所有用户信息 ===========\n");
+    for(int i = 0; i < usercount; i++){
+        printf("用户 %d:\n", i + 1);
+        printf("姓名:%s\n", users[i].name);
+        printf("身份证号:%lld\n", users[i].IDnumber);
+        printf("账号:%lld\n", users[i].account);
+        printf("存款:%lf\n", users[i].deposit);
+        printf("-----------------------------------\n");
+    }
+    printf("=========== 展示结束 ===========\n");
+}
+
 //----------------------------------------------------------------------------------------
